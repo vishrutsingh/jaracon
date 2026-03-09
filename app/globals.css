@@ -1,26 +1,165 @@
 @import "tailwindcss";
 
+/* ─── Design Tokens ─── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #F5F3EE;
+  --surface: #EDEAE3;
+  --dark: #1A1A1A;
+  --mid: #6B6B6B;
+  --muted: #9A9A9A;
+  --border: rgba(26,26,26,0.12);
+  --orange: #E8521A;
+  --navy: #2D3161;
+  --white: #FFFFFF;
+
+  --text-max: 60ch;
+  --section-padding: clamp(5rem, 10vw, 8rem);
+  --container-padding: clamp(1.5rem, 6vw, 5rem);
+  --nav-height: 68px;
 }
 
+/* ─── Tailwind v4 Theme ─── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-dark: var(--dark);
+  --color-mid: var(--mid);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-orange: var(--orange);
+  --color-navy: var(--navy);
+  --font-dm: var(--font-dm-sans);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Base ─── */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--dark);
+  font-family: var(--font-dm-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--orange);
+  color: var(--white);
+}
+
+/* ─── Typography Classes ─── */
+.text-hero {
+  font-family: var(--font-dm-sans);
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-weight: 700;
+  line-height: 1.0;
+}
+
+.text-heading {
+  font-family: var(--font-dm-sans);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--dark);
+}
+
+.text-title {
+  font-family: var(--font-dm-sans);
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--dark);
+}
+
+.text-eyebrow {
+  font-family: var(--font-dm-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--mid);
+}
+
+.text-body {
+  font-family: var(--font-dm-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.75;
+  max-width: 60ch;
+}
+
+.text-sm {
+  font-family: var(--font-dm-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.text-xs {
+  font-family: var(--font-dm-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+/* ─── Layout ─── */
+.container-site {
+  padding-left: var(--container-padding);
+  padding-right: var(--container-padding);
+}
+
+.section-padding {
+  padding-top: var(--section-padding);
+  padding-bottom: var(--section-padding);
+}
+
+/* ─── Vertical Text Loop (CTA hover) ─── */
+.text-loop {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  height: 1.2em;
+}
+
+.text-loop__inner {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.text-loop:hover .text-loop__inner {
+  transform: translateY(-50%);
+}
+
+.text-loop__text {
+  display: block;
+  height: 1.2em;
+  line-height: 1.2em;
+}
+
+/* ─── Scrollbar Hide ─── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Service Tiles Auto-scroll ─── */
+@keyframes scroll-x {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-scroll-x {
+  animation: scroll-x 60s linear infinite;
+}
+
+/* ─── Scroll Indicator ─── */
+@keyframes bounce-arrow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
 }
