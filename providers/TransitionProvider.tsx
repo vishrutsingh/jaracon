@@ -20,6 +20,7 @@ export default function TransitionProvider({ children }: { children: React.React
         initial="initial"
         animate="animate"
         exit="exit"
+        onAnimationStart={() => window.scrollTo(0, 0)}
       >
         {children}
       </motion.div>

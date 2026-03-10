@@ -37,8 +37,8 @@ Light editorial design matching an-vas.webflow.io almost 1:1. Cream backgrounds,
 ## Typography
 
 ### Font
-**DM Sans** — single font family. Weights: 400, 500, 600, 700.
-No other fonts. Ever.
+**Arial** (Helvetica, sans-serif fallback) — single system font stack.
+All text is **uppercase** with `letter-spacing: 0.02em` applied globally via body.
 
 ### Scale
 
@@ -53,9 +53,8 @@ No other fonts. Ever.
 | `.text-xs`    | `0.75rem`                      | 400    | —           | Metadata, labels         |
 
 ### Hard Typography Rules
-- **NEVER** use `text-transform: uppercase` anywhere
-- **NEVER** use `letter-spacing` tricks anywhere
-- All text is sentence case or lowercase
+- All text is **uppercase** globally (`text-transform: uppercase` on body)
+- `letter-spacing: 0.02em` on body for readability
 - Body copy always max 60ch
 
 ---
@@ -116,12 +115,13 @@ All sections (except Hero) are wrapped in `<StackCard>`. Each card sticks below 
 
 ---
 
-## Interior Pages — `components/sections/InteriorHero.tsx`
+## Interior Pages
 
-- Reusable hero for about, services, projects, contact pages
-- EyebrowLabel with orange dot + SplitLines clip-mask heading
-- Animated vertical line scroll indicator
-- `min-h-[60vh]`, flex items-end, pb-20
+- **No InteriorHero** — interior pages (about, services, projects, contact) have no hero section
+- Content starts immediately below the navbar with `pt-[var(--nav-height)]`
+- **No StackCards** on interior pages — only the home page uses StackCard wrappers
+- **Navbar is always dark** on interior pages (black text); only home page has white text over the video hero
+- Pages scroll to top on navigation via `window.scrollTo(0, 0)` in TransitionProvider
 
 ---
 
@@ -131,17 +131,26 @@ All sections (except Hero) are wrapped in `<StackCard>`. Each card sticks below 
 
 Desktop (pointer: fine):
 - Full-viewport 4×4 grid (GSAP positioned)
-- 15 service tiles + 1 "let's talk" CTA tile = 16 tiles filling the grid
-- On hover: CTA tile swaps position with hovered tile (GSAP `back.out(1.7)` bounce)
-- On grid leave: all tiles reset to default positions (`back.out(1.4)`)
+- 15 service tiles + 1 "view details" CTA tile = 16 tiles filling the grid
+- On hover: CTA tile swaps position with hovered tile (GSAP `power2.inOut`, 0.7s)
+- On grid leave: all tiles reset to default positions (`power2.inOut`, 0.8s)
 - 64px bottom margin in grid calculation for whitespace
-- Tiles: number, icon (`bg-orange/8`), name (`text-[1.15rem]`), description (`text-xs line-clamp-2`), category
+- All tiles: `cursor-default select-none` — no text cursor on hover
+
+**Contextual detail reveal:**
+- Tiles adjacent to the CTA (up/down/left/right neighbors) are **active** — show number + name + gray icon (`bg-dark/5`, `text-mid`) + auto-scrolling description
+- All other tiles are **inactive** — show number + name only (icon, description hidden via `opacity-0`)
+- As CTA swaps on hover, new neighbors activate, old ones deactivate (CSS `transition-opacity duration-300`)
+- No category labels on desktop tiles
+- Description auto-scrolls vertically (CSS `@keyframes scroll-desc-up`, 20s `ease-in-out`, looping) with top/bottom fade mask (`mask-image linear-gradient`)
+- Corner CTA = 2 active neighbors, edge = 3, interior = 4
+- Hook returns `activeTiles: number[]` — recalculated on every swap and reset
 
 Mobile (touch):
 - Static CSS grid (`grid-cols-1 sm:grid-cols-2 md:grid-cols-3`)
-- Same tile design, larger padding
+- All tiles always show full details (no contextual reveal)
 
-Hook: `hooks/useServicesGrid.ts` — position math, swap logic, ResizeObserver, pointer detection
+Hook: `hooks/useServicesGrid.ts` — position math, swap logic, neighbor calculation, `activeTiles` state, ResizeObserver, pointer detection
 
 ### Project Rows — editorial rows, NEVER grid cards
 - Border bottom: `rgba(26,26,26,0.12)`
@@ -172,7 +181,8 @@ Hook: `hooks/useServicesGrid.ts` — position math, swap logic, ResizeObserver, 
 - Enter: 0.35s, Exit: 0.25s
 
 ### Scroll Entrance — `FadeUp` / `useFadeUp`
-- translateY(30px) → 0 + opacity 0 → 1
+- `gsap.set()` immediately hides (opacity: 0, y: 30), then `gsap.to()` reveals on scroll
+- **Never use `gsap.from()`** for scroll entrances — use `gsap.set()` + `gsap.to()` pattern to avoid `immediateRender` issues with GSAP 3.14+ and ScrollTrigger
 - Trigger: element enters at 88% viewport
 - Duration: 0.6s, ease: power3.out
 - Plays once
@@ -215,3 +225,12 @@ Hook: `hooks/useServicesGrid.ts` — position math, swap logic, ResizeObserver, 
 | 2026-03-10 | GSAP scroll snap — Lenis scrollTo with global lock, 80% down / 20% up triggers | StackCard, LenisProvider, animations.ts |
 | 2026-03-10 | Combined StatsBar + ClientsSection into one h-dvh StackCard | page.tsx |
 | 2026-03-10 | min-h-dvh on AboutSnippet + ContactSection for consistent card heights | AboutSnippet, ContactSection |
+| 2026-03-10 | Typography: switched from DM Sans to Arial, added global uppercase + letter-spacing | layout.tsx, globals.css |
+| 2026-03-10 | Removed InteriorHero from all interior pages — content starts below navbar | about, services, projects, contact pages |
+| 2026-03-10 | Navbar always dark on interior pages — only white on home hero | Navbar.tsx |
+| 2026-03-10 | Scroll-to-top on page navigation | TransitionProvider.tsx |
+| 2026-03-10 | Removed StackCards from interior pages — only home page uses them | about, services, projects, contact pages |
+| 2026-03-10 | Fixed FadeUp: switched from gsap.from() to gsap.set()+gsap.to() pattern | useFadeUp.ts |
+| 2026-03-10 | Contextual detail reveal on services grid — only CTA neighbors show icon + auto-scrolling description | ServicesGrid, useServicesGrid, animations.ts, globals.css |
+| 2026-03-10 | Grid swap easing: back.out → power2.inOut for smoother motion | animations.ts |
+| 2026-03-10 | CTA tile renamed: "let's talk" → "view details", "reach out" → "learn more" | ServicesGrid.tsx |

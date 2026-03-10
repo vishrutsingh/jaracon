@@ -12,7 +12,7 @@ import { ArrowRight } from 'lucide-react'
 
 export default function ServicesGrid() {
   const gridRef = useRef<HTMLDivElement>(null)
-  const { isFinePointer, setTileRef, handleTileHover, handleGridLeave } = useServicesGrid(gridRef)
+  const { isFinePointer, setTileRef, handleTileHover, handleGridLeave, activeTiles } = useServicesGrid(gridRef)
 
   // ─── Mobile / touch: simple CSS grid ───
   if (!isFinePointer) {
@@ -87,6 +87,7 @@ export default function ServicesGrid() {
         {services.map((service, i) => {
           const Icon = iconMap[service.icon]
           const num = String(i + 1).padStart(2, '0')
+          const isActive = activeTiles.includes(i)
           return (
             <div
               key={service.id}
@@ -95,24 +96,29 @@ export default function ServicesGrid() {
               style={{ zIndex: 1 }}
               onMouseEnter={() => handleTileHover(i)}
             >
-              <div className="w-full h-full border border-border p-4 flex flex-col justify-between bg-bg hover:bg-surface transition-colors duration-200 overflow-hidden">
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
+              <div className="w-full h-full border border-border p-4 flex flex-col justify-between bg-bg hover:bg-surface transition-colors duration-200 overflow-hidden cursor-default select-none">
+                <div className="flex flex-col gap-2 min-h-0 flex-1">
+                  <div className="flex items-center justify-between shrink-0">
                     <span className="text-xs text-muted">{num}</span>
                     {Icon && (
-                      <div className="w-8 h-8 rounded-lg bg-orange/8 flex items-center justify-center">
-                        <Icon size={16} className="text-orange" />
+                      <div className={`w-8 h-8 rounded-lg bg-dark/5 flex items-center justify-center transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
+                        <Icon size={16} className="text-mid" />
                       </div>
                     )}
                   </div>
-                  <h3 className="text-[1.15rem] font-semibold text-dark leading-tight">
+                  <h3 className="text-[1.15rem] font-semibold text-dark leading-tight shrink-0">
                     {service.name}
                   </h3>
-                  <p className="text-xs text-mid leading-relaxed line-clamp-2">
-                    {service.description}
-                  </p>
+                  <div
+                    className={`flex-1 min-h-0 overflow-hidden transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0'}`}
+                    style={{ maskImage: 'linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)' }}
+                  >
+                    <div className={isActive ? 'animate-scroll-desc' : ''}>
+                      <p className="text-xs text-mid leading-relaxed py-1">{service.description}</p>
+                      <p className="text-xs text-mid leading-relaxed py-1">{service.description}</p>
+                    </div>
+                  </div>
                 </div>
-                <span className="text-xs text-muted">{service.category}</span>
               </div>
             </div>
           )
@@ -129,11 +135,11 @@ export default function ServicesGrid() {
             href="/contact"
             className="w-full h-full border border-border bg-bg p-5 flex flex-col justify-between group block hover:bg-surface transition-colors duration-200"
           >
-            <span className="text-xs text-muted">get in touch</span>
+            <span className="text-xs text-muted">explore</span>
             <div>
-              <h3 className="text-title mb-2">let&apos;s talk</h3>
+              <h3 className="text-title mb-2">view details</h3>
               <span className="text-[0.8rem] text-orange">
-                <LoopText label="reach out &rarr;" />
+                <LoopText label="learn more &rarr;" />
               </span>
             </div>
             <ArrowRight

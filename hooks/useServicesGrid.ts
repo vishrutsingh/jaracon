@@ -13,6 +13,17 @@ const DEFAULT_POSITIONS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
 const BOTTOM_MARGIN = 64
 
+function getNeighborCells(cellIndex: number): number[] {
+  const row = Math.floor(cellIndex / COLS)
+  const col = cellIndex % COLS
+  const neighbors: number[] = []
+  if (row > 0) neighbors.push(cellIndex - COLS)
+  if (row < ROWS - 1) neighbors.push(cellIndex + COLS)
+  if (col > 0) neighbors.push(cellIndex - 1)
+  if (col < COLS - 1) neighbors.push(cellIndex + 1)
+  return neighbors
+}
+
 function getCellCoords(cellIndex: number, containerW: number, containerH: number) {
   const usableH = containerH - BOTTOM_MARGIN
   const cellW = containerW / COLS
@@ -27,6 +38,10 @@ export function useServicesGrid(gridRef: React.RefObject<HTMLDivElement | null>)
   const tileRefs = useRef<(HTMLDivElement | null)[]>(Array(TOTAL_TILES).fill(null))
   const tilePositions = useRef<number[]>([...DEFAULT_POSITIONS])
   const [isFinePointer, setIsFinePointer] = useState(false)
+  const [activeTiles, setActiveTiles] = useState<number[]>(() => {
+    const neighborCells = getNeighborCells(DEFAULT_POSITIONS[CTA_INDEX])
+    return neighborCells.map(cell => DEFAULT_POSITIONS.indexOf(cell))
+  })
 
   // Detect pointer type (avoids hydration mismatch — starts false)
   useEffect(() => {
@@ -105,6 +120,14 @@ export function useServicesGrid(gridRef: React.RefObject<HTMLDivElement | null>)
         onComplete: () => { gsap.set(ctaEl, { zIndex: 2 }) },
       })
     }
+
+    // Update active tiles to neighbors of CTA's new position
+    const ctaNewCell = tilePositions.current[CTA_INDEX]
+    const neighborCells = getNeighborCells(ctaNewCell)
+    const newActive = neighborCells
+      .map(cell => tilePositions.current.indexOf(cell))
+      .filter(idx => idx !== -1 && idx !== CTA_INDEX)
+    setActiveTiles(newActive)
   }, [gridRef])
 
   // Reset: all tiles return to defaults
@@ -124,6 +147,10 @@ export function useServicesGrid(gridRef: React.RefObject<HTMLDivElement | null>)
         overwrite: true,
       })
     })
+
+    // Reset active tiles to default CTA neighbors
+    const neighborCells = getNeighborCells(DEFAULT_POSITIONS[CTA_INDEX])
+    setActiveTiles(neighborCells.map(cell => DEFAULT_POSITIONS.indexOf(cell)))
   }, [gridRef])
 
   // Callback ref setter
@@ -131,5 +158,5 @@ export function useServicesGrid(gridRef: React.RefObject<HTMLDivElement | null>)
     tileRefs.current[index] = el
   }, [])
 
-  return { isFinePointer, setTileRef, handleTileHover, handleGridLeave }
+  return { isFinePointer, setTileRef, handleTileHover, handleGridLeave, activeTiles }
 }

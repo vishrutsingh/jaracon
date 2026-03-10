@@ -160,6 +160,15 @@ body {
   animation: scroll-x 60s linear infinite;
 }
 
+/* ─── Service Description Vertical Scroll ─── */
+@keyframes scroll-desc-up {
+  0%, 10% { transform: translateY(0); }
+  90%, 100% { transform: translateY(-50%); }
+}
+.animate-scroll-desc {
+  animation: scroll-desc-up 20s ease-in-out infinite;
+}
+
 /* ─── Film Grain Overlay ─── */
 body::after {
   content: '';

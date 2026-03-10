@@ -14,7 +14,7 @@ JARACON EPC — corporate website for a Qatar-based construction and engineering
 - **Smooth scroll**: Lenis (synced with GSAP ScrollTrigger, exposed via React context)
 - **Animation**: GSAP (ScrollTrigger, scroll entrances, grid swap) + Framer Motion (page transitions)
 - **Icons**: lucide-react
-- **Font**: DM Sans (single font, weights 400–700)
+- **Font**: Arial (system font, uppercase globally)
 
 ## Commands
 
@@ -29,7 +29,7 @@ bun run start    # Start production server
 
 ```
 app/
-  layout.tsx              # Root layout — DM Sans font, providers, navbar, transition, footer
+  layout.tsx              # Root layout — Arial font, providers, navbar, transition, footer
   page.tsx                # Home — hero, about, services, stats+clients, contact (all in StackCards)
   globals.css             # Tailwind v4 + design tokens CSS + typography/layout utilities
   about/page.tsx
@@ -45,7 +45,7 @@ content/
 hooks/
   useFadeUp.ts            # GSAP scroll entrance hook
   useProjectHover.ts      # Project image follow hook
-  useServicesGrid.ts      # Interactive 4×4 grid — GSAP swap animation, pointer detection
+  useServicesGrid.ts      # Interactive 4×4 grid — GSAP swap, neighbor calc, activeTiles state, pointer detection
 providers/
   LenisProvider.tsx       # Smooth scroll — syncs Lenis with GSAP, exposes via React context
   GSAPProvider.tsx        # GSAP context — scoped to app root
@@ -100,14 +100,16 @@ public/
 
 - **Aesthetic**: Light editorial — cream bg, near-black text, minimal color
 - **Palette**: bg `#F5F3EE`, dark `#1A1A1A`, mid `#6B6B6B`, orange `#E8521A` (max 2 elements), navy `#2D3161` (max 1 section)
-- **Font**: DM Sans only — never uppercase, never letter-spacing tricks
+- **Font**: Arial only — all text uppercase with `letter-spacing: 0.02em`
 - **Layout**: Full-width container (padded edges), 60ch body max, generous section padding
 - **Motion**: GSAP scroll entrances (translateY 30 + opacity), simple opacity page transitions
-- **Zero**: gradients, box shadows, uppercase text, letter-spacing tricks
+- **Zero**: gradients, box shadows
 
-## Stacking Cards + Scroll Snap
+## Stacking Cards + Scroll Snap (Home Page Only)
 
-All sections except Hero are wrapped in `<StackCard index={N}>`. Cards use `position: sticky; top: var(--nav-height)` with increasing z-index so each card covers the previous one.
+StackCards are **only used on the home page**. Interior pages (about, services, projects, contact) use plain scrolling with `pt-[var(--nav-height)]`.
+
+On the home page, all sections except Hero are wrapped in `<StackCard index={N}>`. Cards use `position: sticky; top: var(--nav-height)` with increasing z-index so each card covers the previous one.
 
 **Scroll snapping** (GSAP ScrollTrigger + Lenis `scrollTo`):
 - Down: triggers at 80% viewport → snaps card to top
@@ -117,13 +119,22 @@ All sections except Hero are wrapped in `<StackCard index={N}>`. Cards use `posi
 - Every section in a StackCard must be `min-h-dvh` for proper trigger spacing
 - Short sections (StatsBar + ClientsSection) combined into one `h-dvh` card
 
+## Interior Pages
+
+- No InteriorHero — content starts directly below navbar
+- No StackCards — plain scrolling layout
+- Navbar always dark (black text); only home page has white text over hero
+- Pages scroll to top on navigation (`window.scrollTo(0, 0)` in TransitionProvider)
+
 ## Rules
 
 1. **Always reference `.claude/DESIGN.md` before creating or modifying any component or page.**
 2. Import `gsap` and `ScrollTrigger` from `@/lib/gsap` — never from `'gsap'` directly.
 3. Use constants from `@/lib/tokens` and `@/lib/animations` — never hardcode design values.
 4. Content comes from `@/content/*` — never hardcode company text.
-5. Never uppercase text anywhere. Never use letter-spacing tricks.
+5. All text is uppercase globally (set on body). Do not override `text-transform`.
 6. Orange appears on maximum 2 elements per page. Navy bg on maximum 1 section.
 7. Every section inside a StackCard must have `min-h-dvh`.
 8. Access Lenis via `useLenisRef()` — read `.current` inside callbacks, never at render time.
+9. StackCards are **home page only** — never use on interior pages (causes dead scroll zones).
+10. For GSAP scroll entrances, use `gsap.set()` + `gsap.to()` — never `gsap.from()` (broken `immediateRender` in GSAP 3.14+ with ScrollTrigger).

@@ -18,9 +18,11 @@ export function useFadeUp<T extends HTMLElement>(options: UseFadeUpOptions = {})
     if (!ref.current) return
     const targets = options.stagger ? ref.current.children : ref.current
 
-    gsap.from(targets, {
-      y: options.y ?? config.y,
-      opacity: 0,
+    gsap.set(targets, { opacity: 0, y: options.y ?? config.y })
+
+    gsap.to(targets, {
+      opacity: 1,
+      y: 0,
       duration: config.duration,
       delay: options.delay ?? 0,
       stagger: options.stagger ?? 0,

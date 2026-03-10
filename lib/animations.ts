@@ -30,10 +30,10 @@ export const scrollReveal = {
 } as const
 
 export const gridSwap = {
-  duration: 0.5,
-  ease: 'back.out(1.7)',
-  resetDuration: 0.6,
-  resetEase: 'back.out(1.4)',
+  duration: 0.7,
+  ease: 'power2.inOut',
+  resetDuration: 0.8,
+  resetEase: 'power2.inOut',
 } as const
 
 export const cardSnap = {

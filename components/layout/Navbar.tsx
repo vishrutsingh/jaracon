@@ -18,7 +18,7 @@ export default function Navbar() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
   const isHome = pathname === '/'
-  const [isHero, setIsHero] = useState(isHome)
+  const [isHero, setIsHero] = useState(false)
   const navRef = useRef<HTMLElement>(null)
 
   useGSAP(() => {

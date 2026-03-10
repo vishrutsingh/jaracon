@@ -1,10 +1,8 @@
 import { companyInfo } from '@/content/about'
-import InteriorHero from '@/components/sections/InteriorHero'
 import FadeUp from '@/components/animations/FadeUp'
 import SplitLines from '@/components/animations/SplitLines'
 import EyebrowLabel from '@/components/ui/EyebrowLabel'
 import ContactSection from '@/components/sections/ContactSection'
-import StackCard from '@/components/animations/StackCard'
 import {
   Shield, Heart, Award, Lightbulb,
   Target, Eye,
@@ -17,16 +15,11 @@ const principleIcons = [Scale, BrainCircuit, ShieldAlert, HeartHandshake]
 export default function AboutPage() {
   return (
     <>
-      <InteriorHero
-        eyebrow="about us"
-        lines={['Who we are.']}
-      />
+      <div className="bg-bg pt-[calc(var(--nav-height)+var(--section-padding))] pb-[var(--section-padding)]">
+        <div className="container-site">
 
-      {/* About content */}
-      <StackCard index={1}>
-        <section className="section-padding bg-bg">
-          <div className="container-site">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            {/* Our Story */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-24">
               <div>
                 <FadeUp>
                   <EyebrowLabel text="our story" className="mb-6" />
@@ -40,15 +33,9 @@ export default function AboutPage() {
                 <p className="text-body text-mid">{companyInfo.about}</p>
               </FadeUp>
             </div>
-          </div>
-        </section>
-      </StackCard>
 
-      {/* Mission & Vision */}
-      <StackCard index={2}>
-        <section className="section-padding bg-bg">
-          <div className="container-site">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            {/* Mission & Vision */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-24 border-t border-border pt-16">
               <FadeUp>
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-9 h-9 rounded-lg bg-orange/8 flex items-center justify-center">
@@ -68,15 +55,9 @@ export default function AboutPage() {
                 <p className="text-body text-mid">{companyInfo.vision}</p>
               </FadeUp>
             </div>
-          </div>
-        </section>
-      </StackCard>
 
-      {/* Core Values & Principles */}
-      <StackCard index={3}>
-        <section className="section-padding bg-bg">
-          <div className="container-site">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            {/* Core Values & Principles */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-24 border-t border-border pt-16">
               <div>
                 <FadeUp>
                   <EyebrowLabel text="core values" className="mb-6" />
@@ -118,15 +99,9 @@ export default function AboutPage() {
                 </FadeUp>
               </div>
             </div>
-          </div>
-        </section>
-      </StackCard>
 
-      {/* Founder */}
-      <StackCard index={4}>
-        <section className="section-padding bg-bg">
-          <div className="container-site">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+            {/* Founder */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start border-t border-border pt-16">
               <FadeUp className="md:col-span-4 relative">
                 <div
                   className="w-[130%] aspect-[3/4] bg-surface -ml-8 bg-cover bg-center"
@@ -147,11 +122,11 @@ export default function AboutPage() {
                 </p>
               </FadeUp>
             </div>
-          </div>
-        </section>
-      </StackCard>
 
-      <StackCard index={5}><ContactSection /></StackCard>
+        </div>
+      </div>
+
+      <ContactSection />
     </>
   )
 }
