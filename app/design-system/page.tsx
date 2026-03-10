@@ -17,13 +17,13 @@ import FadeUp from '@/components/animations/FadeUp'
 import SplitLines from '@/components/animations/SplitLines'
 
 const colors = [
-  { name: 'bg', value: '#F5F3EE', usage: 'primary background' },
-  { name: 'surface', value: '#EDEAE3', usage: 'hover states, alt bg' },
-  { name: 'dark', value: '#1A1A1A', usage: 'text, headings' },
-  { name: 'mid', value: '#6B6B6B', usage: 'secondary text' },
-  { name: 'muted', value: '#9A9A9A', usage: 'metadata, labels' },
+  { name: 'bg', value: '#f3f3f4', usage: 'primary background (platinum)' },
+  { name: 'surface', value: '#d9c5b2', usage: 'hover states, alt bg (pale-oak)' },
+  { name: 'dark', value: '#14110f', usage: 'text, headings (pitch-black)' },
+  { name: 'mid', value: '#34312d', usage: 'secondary text (graphite)' },
+  { name: 'muted', value: '#7e7f83', usage: 'metadata, labels (grey)' },
   { name: 'border', value: 'rgba(26,26,26,0.12)', usage: 'borders' },
-  { name: 'orange', value: '#E8521A', usage: 'accent (max 2/page)' },
+  { name: 'orange', value: '#E8521A', usage: 'defined but unused — accent is graphite (mid)' },
   { name: 'navy', value: '#2D3161', usage: 'max 1 section' },
 ]
 
@@ -99,16 +99,16 @@ function TokensSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
             'zero gradients anywhere',
-            'zero box shadows anywhere',
-            'never uppercase text',
-            'never letter-spacing tricks',
-            'orange max 2 elements per page',
+            'zero box shadows (except glass elements)',
+            'all text uppercase globally',
+            'letter-spacing 0.02em on body',
+            'accent color is graphite (mid) — no orange in UI',
             'navy max 1 section',
             'body copy max 60ch',
-            'sentence case or lowercase only',
+            'selection: graphite bg + white text',
           ].map(rule => (
             <div key={rule} className="flex items-center gap-3 py-3 border-b border-border">
-              <span className="w-1.5 h-1.5 rounded-full bg-orange shrink-0" />
+              <span className="w-1.5 h-1.5 rounded-full bg-mid shrink-0" />
               <span className="text-sm text-mid">{rule}</span>
             </div>
           ))}
@@ -143,7 +143,7 @@ function TypographySection() {
         />
         <TypoRow
           label=".text-eyebrow"
-          spec="0.75rem / 400 / color: #6B6B6B"
+          spec="0.75rem / 400 / color: var(--dark)"
           className="text-eyebrow"
           sample="selected projects"
         />

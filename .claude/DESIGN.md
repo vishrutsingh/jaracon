@@ -16,21 +16,21 @@ Light editorial design matching an-vas.webflow.io almost 1:1. Cream backgrounds,
 
 | Token    | Value                   | Usage                                    |
 |----------|-------------------------|------------------------------------------|
-| bg       | `#F5F3EE`               | Primary background — cream               |
-| surface  | `#EDEAE3`               | Hover states, alt backgrounds            |
-| dark     | `#1A1A1A`               | Primary text, headings                   |
-| mid      | `#6B6B6B`               | Secondary text, descriptions             |
-| muted    | `#9A9A9A`               | Tertiary text, metadata                  |
+| bg       | `#f3f3f4`               | Primary background — platinum            |
+| surface  | `#d9c5b2`               | Hover states, alt backgrounds — pale-oak |
+| dark     | `#14110f`               | Primary text, headings — pitch-black     |
+| mid      | `#34312d`               | Secondary text, descriptions — graphite  |
+| muted    | `#7e7f83`               | Tertiary text, metadata — grey           |
 | border   | `rgba(26,26,26,0.12)`   | All borders and separators               |
-| orange   | `#E8521A`               | Accent — max 2 elements per page         |
+| orange   | `#E8521A`               | Defined but unused — accent is graphite (mid) |
 | navy     | `#2D3161`               | Max 1 section (stats bar only)           |
 | white    | `#FFFFFF`               | Text on dark backgrounds                 |
 
 **Absolute rules:**
 - Zero gradients anywhere
 - Zero box shadows anywhere
-- Only orange accent — no teal, amber, slate
-- Selection: orange bg + white text
+- Accent color is graphite (`--mid`) — no orange, teal, amber, slate in UI
+- Selection: graphite bg + white text
 
 ---
 
@@ -47,7 +47,7 @@ All text is **uppercase** with `letter-spacing: 0.02em` applied globally via bod
 | `.text-hero`  | `clamp(3rem, 8vw, 6.5rem)`    | 700    | 1.0         | Page headings            |
 | `.text-heading` | `clamp(2rem, 4vw, 3.5rem)`  | 700    | 1.1         | Section headings         |
 | `.text-title` | `clamp(1.25rem, 2.5vw, 1.75rem)` | 600 | 1.2         | Item titles              |
-| `.text-eyebrow` | `0.75rem`                   | 400    | —           | Color: `#6B6B6B`         |
+| `.text-eyebrow` | `0.75rem`                   | 400    | —           | Color: `var(--dark)`     |
 | `.text-body`  | `1rem`                         | 400    | 1.75        | Max-width: 60ch          |
 | `.text-sm`    | `0.875rem`                     | 400    | 1.6         | Descriptions             |
 | `.text-xs`    | `0.75rem`                      | 400    | —           | Metadata, labels         |
@@ -76,23 +76,26 @@ All text is **uppercase** with `letter-spacing: 0.02em` applied globally via bod
 | Property     | Value                                          |
 |--------------|-------------------------------------------------|
 | Height       | `68px`, always transparent, no scroll effects   |
-| Logo         | "JARACON" — DM Sans 700, 1.1rem, dark           |
-| Links        | lowercase, DM Sans 400, 0.9rem, dark            |
+| Logo         | "JARACON" — Arial 700, 1.1rem                   |
+| Links        | about, services, projects — Arial 400, 0.9rem   |
 | Hover        | opacity 0.6                                      |
 | Active       | font-weight 500                                  |
-| CTA          | "reach out" with LoopText                        |
+| CTA          | "reach out →" with LoopText                     |
 | Mobile       | 2-line hamburger → cream overlay                 |
+| Auto-color   | `elementsFromPoint()` + luminance — white text on dark bg, dark text on light bg |
 
 ---
 
 ## Hero — `components/sections/Hero.tsx`
 
 - Fullscreen video background with dark overlay
-- H1: "Think big, construct bigger." — clip-mask reveal
-- Description: word-by-word stagger
-- Scroll indicator: animated vertical line (CSS keyframe)
-- Load: cinematic GSAP timeline (overlay lift → headline reveal → tag → description → CTA)
+- Giant scrolling marquee: "THINK BIG, CONSTRUCT BIGGER." in italic ~20vw bold white
+- Text is so large only ~half fits on screen — rest scrolls in from offscreen right
+- Marquee pinned to bottom of viewport (`flex items-end`)
+- CSS `animate-scroll-hero` (30s linear infinite, reuses `scroll-x` keyframe)
+- Load: cinematic GSAP timeline (overlay lift → marquee fades in + rises)
 - Video parallax: y -15% on scroll (ScrollTrigger scrub)
+- No description, no CTA, no Qatar tag, no scroll indicator — just the marquee
 
 ---
 
@@ -117,11 +120,27 @@ All sections (except Hero) are wrapped in `<StackCard>`. Each card sticks below 
 
 ## Interior Pages
 
-- **No InteriorHero** — interior pages (about, services, projects, contact) have no hero section
+- **No InteriorHero** — interior pages (about, projects, contact) have no hero section
 - Content starts immediately below the navbar with `pt-[var(--nav-height)]`
-- **No StackCards** on interior pages — only the home page uses StackCard wrappers
-- **Navbar is always dark** on interior pages (black text); only home page has white text over the video hero
+- **Services page** uses StackCards with `h-dvh` sections (editorial spreads per category)
+- Other interior pages use plain scrolling — no StackCards
+- **Navbar auto-detects** background color via `elementsFromPoint()` + luminance calculation — switches white/dark text automatically
 - Pages scroll to top on navigation via `window.scrollTo(0, 0)` in TransitionProvider
+
+## Services Page — `app/services/page.tsx`
+
+Editorial magazine layout with StackCards. Each category has a unique spread:
+
+1. **OpeningHero** (StackCard 1, bg-surface): "S E R V I C E S" centered, "15" watermark
+2. **Structural** (StackCard 2, bg-bg): Blueprint layout — dashed border, 3 services with connecting lines
+3. **Finishing** (StackCard 3, bg-dark): Dark header band, 3×2 specimen grid, white text
+4. **Infrastructure** (StackCard 4, bg-bg): 50/50 glass blocks with letter-spaced names
+5. **Buildings** (StackCard 5, bg-bg): Asymmetric 12-col grid with double-rule "fold" separator
+6. **Energy** (StackCard 6, bg-dark): Glass-dark cards, broken-word typography
+7. **ClosingCTA** (StackCard 7, bg-bg): "READY TO BUILD?" with SplitLines
+8. **ContactSection**: Unwrapped at bottom
+
+All section headings use SplitLines. Content uses staggered FadeUp animations.
 
 ---
 
@@ -155,12 +174,12 @@ Hook: `hooks/useServicesGrid.ts` — position math, swap logic, neighbor calcula
 ### Project Rows — editorial rows, NEVER grid cards
 - Border bottom: `rgba(26,26,26,0.12)`
 - Number + title + location + status badge + client + year + ArrowRight icon
-- Hover: bg → surface, arrow slides in, title → orange
+- Hover: bg → surface, arrow slides in, title → graphite (mid)
 - Hover image follows cursor (GSAP ticker, lerp 0.1)
 
 ### Stats Bar — dark section
 - `#1A1A1A` background, cream/white text
-- lucide icons (Sun, Factory, FolderKanban, Users) in orange above each stat
+- lucide icons (Sun, Factory, FolderKanban, Users) in graphite above each stat
 - 4 columns with CountUp animation (GSAP ScrollTrigger, power2.out, 2s)
 - Combined with ClientsSection in one `h-dvh` StackCard on home page
 
@@ -171,8 +190,8 @@ Hook: `hooks/useServicesGrid.ts` — position math, swap logic, neighbor calcula
 
 ### Contact — underline fields only
 - No box borders anywhere
-- Floating labels: muted → orange on focus
-- Contact details with MapPin, Phone, Mail icons (`bg-orange/8`)
+- Floating labels: muted → graphite on focus
+- Contact details with MapPin, Phone, Mail icons (`bg-mid/8`)
 - Submit: LoopText "send message →"
 - `min-h-dvh` when inside StackCard
 
@@ -192,7 +211,7 @@ Hook: `hooks/useServicesGrid.ts` — position math, swap logic, neighbor calcula
 - Hover: translateY(-50%), 0.35s cubic-bezier(0.76, 0, 0.24, 1)
 
 ### EyebrowLabel
-- Orange dot (w-1.5 h-1.5) + text-eyebrow text
+- Graphite dot (w-1.5 h-1.5 bg-mid) + text-eyebrow text
 - Used on all section labels
 
 ### SectionDivider
@@ -234,3 +253,5 @@ Hook: `hooks/useServicesGrid.ts` — position math, swap logic, neighbor calcula
 | 2026-03-10 | Contextual detail reveal on services grid — only CTA neighbors show icon + auto-scrolling description | ServicesGrid, useServicesGrid, animations.ts, globals.css |
 | 2026-03-10 | Grid swap easing: back.out → power2.inOut for smoother motion | animations.ts |
 | 2026-03-10 | CTA tile renamed: "let's talk" → "view details", "reach out" → "learn more" | ServicesGrid.tsx |
+| 2026-03-10 | Glassmorphism: glass/glass-dark utility classes, useGlassEffect cursor-tracking hook | globals.css, tokens.ts, useGlassEffect, ServicesGrid, ServiceTile, StatsBar |
+| 2026-03-10 | Palette swap: eggshell/almond-cream/almond-silk/rosy-taupe/taupe warm tones | globals.css, tokens.ts, DESIGN.md, CLAUDE.md |

@@ -6,6 +6,7 @@ import { gsap } from '@/lib/gsap'
 import { scrollReveal } from '@/lib/animations'
 import { Sun, Factory, FolderKanban, Users } from 'lucide-react'
 import CountUp from '@/components/ui/CountUp'
+import { useGlassEffect } from '@/hooks/useGlassEffect'
 import FadeUp from '@/components/animations/FadeUp'
 
 const stats = [
@@ -17,6 +18,7 @@ const stats = [
 
 export default function StatsBar() {
   const lineRef = useRef<HTMLDivElement>(null)
+  const { handleMouseMove, handleMouseLeave } = useGlassEffect()
 
   useGSAP(() => {
     if (!lineRef.current) return
@@ -42,8 +44,8 @@ export default function StatsBar() {
             {stats.map(stat => {
               const Icon = stat.icon
               return (
-                <div key={stat.label}>
-                  <Icon size={22} className="text-orange mb-4" />
+                <div key={stat.label} className="glass-dark rounded-lg p-6" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+                  <Icon size={22} className="text-mid mb-4" />
                   <CountUp
                     target={stat.target}
                     suffix={stat.suffix}

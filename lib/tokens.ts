@@ -1,9 +1,9 @@
 export const colors = {
-  bg: '#F5F3EE',
-  surface: '#EDEAE3',
-  dark: '#1A1A1A',
-  mid: '#6B6B6B',
-  muted: '#9A9A9A',
+  bg: '#f3f3f4',
+  surface: '#d9c5b2',
+  dark: '#14110f',
+  mid: '#34312d',
+  muted: '#7e7f83',
   border: 'rgba(26,26,26,0.12)',
   orange: '#E8521A',
   navy: '#2D3161',
@@ -33,7 +33,7 @@ export const typography = {
     fontFamily: 'var(--font-dm-sans)',
     size: '0.75rem',
     weight: 400,
-    color: '#6B6B6B',
+    color: '#34312d',
   },
   body: {
     fontFamily: 'var(--font-dm-sans)',
@@ -58,6 +58,16 @@ export const typography = {
     size: '0.9rem',
     weight: 400,
   },
+} as const
+
+export const glass = {
+  bg: 'rgba(255, 255, 255, 0.14)',
+  bgHover: 'rgba(255, 255, 255, 0.18)',
+  border: 'rgba(255, 255, 255, 0.25)',
+  blur: 20,
+  darkBg: 'rgba(255, 255, 255, 0.06)',
+  darkBgHover: 'rgba(255, 255, 255, 0.1)',
+  darkBorder: 'rgba(255, 255, 255, 0.15)',
 } as const
 
 export const layout = {

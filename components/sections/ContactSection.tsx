@@ -45,7 +45,7 @@ export default function ContactSection() {
                     <label
                       className={`absolute left-0 transition-all duration-200 pointer-events-none ${
                         focused === field.name || values[field.name]
-                          ? '-top-5 text-xs text-orange'
+                          ? '-top-5 text-xs text-mid'
                           : 'top-2 text-[1rem] text-muted'
                       }`}
                     >
@@ -90,8 +90,8 @@ export default function ContactSection() {
                 return (
                   <div key={detail.key}>
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-8 h-8 rounded-lg bg-orange/8 flex items-center justify-center">
-                        <Icon size={16} className="text-orange" />
+                      <div className="w-8 h-8 rounded-lg bg-mid/8 flex items-center justify-center">
+                        <Icon size={16} className="text-mid" />
                       </div>
                       <span className="text-xs text-muted">{detail.key}</span>
                     </div>

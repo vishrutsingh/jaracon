@@ -2,11 +2,11 @@
 
 /* ─── Design Tokens ─── */
 :root {
-  --bg: #F5F3EE;
-  --surface: #EDEAE3;
-  --dark: #1A1A1A;
-  --mid: #6B6B6B;
-  --muted: #9A9A9A;
+  --bg: #f3f3f4;
+  --surface: #d9c5b2;
+  --dark: #14110f;
+  --mid: #34312d;
+  --muted: #7e7f83;
   --border: rgba(26,26,26,0.12);
   --orange: #E8521A;
   --navy: #2D3161;
@@ -16,6 +16,19 @@
   --section-padding: clamp(5rem, 10vw, 8rem);
   --container-padding: clamp(1.5rem, 6vw, 5rem);
   --nav-height: 68px;
+
+  /* Glass — themed to palette */
+  --glass-bg: rgba(217, 197, 178, 0.14);           /* pale-oak */
+  --glass-bg-hover: rgba(217, 197, 178, 0.18);
+  --glass-border: rgba(126, 127, 131, 0.25);       /* grey */
+  --glass-blur: 20px;
+  --glass-shadow: 0 8px 32px rgba(20, 17, 15, 0.06), 0 2px 8px rgba(20, 17, 15, 0.04);   /* pitch-black */
+  --glass-shadow-hover: 0 16px 48px rgba(20, 17, 15, 0.1), 0 4px 12px rgba(20, 17, 15, 0.06);
+  --glass-dark-bg: rgba(217, 197, 178, 0.06);      /* pale-oak */
+  --glass-dark-bg-hover: rgba(217, 197, 178, 0.1);
+  --glass-dark-border: rgba(126, 127, 131, 0.15);  /* grey */
+  --glass-dark-shadow: 0 8px 32px rgba(20, 17, 15, 0.2), 0 2px 8px rgba(20, 17, 15, 0.15);
+  --glass-dark-shadow-hover: 0 16px 48px rgba(20, 17, 15, 0.3), 0 4px 12px rgba(20, 17, 15, 0.2);
 }
 
 /* ─── Tailwind v4 Theme ─── */
@@ -34,6 +47,7 @@
 /* ─── Base ─── */
 html {
   scroll-behavior: smooth;
+  background-color: var(--bg);
 }
 
 body {
@@ -51,7 +65,7 @@ body {
 }
 
 ::selection {
-  background: var(--orange);
+  background: var(--mid);
   color: var(--white);
 }
 
@@ -83,7 +97,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 0.75rem;
   font-weight: 400;
-  color: var(--mid);
+  color: var(--dark);
 }
 
 .text-body {
@@ -160,6 +174,11 @@ body {
   animation: scroll-x 60s linear infinite;
 }
 
+/* ─── Hero Marquee ─── */
+.animate-scroll-hero {
+  animation: scroll-x 30s linear infinite;
+}
+
 /* ─── Service Description Vertical Scroll ─── */
 @keyframes scroll-desc-up {
   0%, 10% { transform: translateY(0); }
@@ -167,6 +186,79 @@ body {
 }
 .animate-scroll-desc {
   animation: scroll-desc-up 20s ease-in-out infinite;
+}
+
+/* ─── Glass Utilities ─── */
+.glass {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: background 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.glass:hover {
+  background: var(--glass-bg-hover);
+  box-shadow: var(--glass-shadow-hover);
+}
+
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(217, 197, 178, 0.12),
+    transparent 50%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: 1;
+}
+
+.glass:hover::before {
+  opacity: 1;
+}
+
+.glass-dark {
+  position: relative;
+  background: var(--glass-dark-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-dark-border);
+  box-shadow: var(--glass-dark-shadow);
+  transition: background 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.glass-dark:hover {
+  background: var(--glass-dark-bg-hover);
+  box-shadow: var(--glass-dark-shadow-hover);
+}
+
+.glass-dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(217, 197, 178, 0.08),
+    transparent 50%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: 1;
+}
+
+.glass-dark:hover::before {
+  opacity: 1;
 }
 
 /* ─── Film Grain Overlay ─── */
@@ -194,6 +286,22 @@ body::after {
 @keyframes bounce-arrow {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(6px); }
+}
+
+/* ─── Editorial Index Number ─── */
+.text-index {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--muted);
+  opacity: 0.15;
+}
+
+/* ─── Vertical Text ─── */
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
 }
 
 /* ─── Section Divider ─── */

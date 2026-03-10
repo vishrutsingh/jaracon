@@ -1,47 +1,99 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useGSAP } from '@gsap/react'
-import { gsap, ScrollTrigger } from '@/lib/gsap'
 import LoopText from '@/components/ui/LoopText'
 
 const links = [
   { href: '/about', label: 'about' },
   { href: '/services', label: 'services' },
   { href: '/projects', label: 'projects' },
-  { href: '/contact', label: 'contact' },
 ]
+
+/** Parse "rgb(r, g, b)" or "rgba(r, g, b, a)" into {r, g, b} */
+function parseRGB(color: string): { r: number; g: number; b: number } | null {
+  const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/)
+  if (!match) return null
+  return { r: Number(match[1]), g: Number(match[2]), b: Number(match[3]) }
+}
 
 export default function Navbar() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
-  const isHome = pathname === '/'
-  const [isHero, setIsHero] = useState(false)
+  const [isDark, setIsDark] = useState(false)
   const navRef = useRef<HTMLElement>(null)
+  const rafRef = useRef<number>(0)
 
-  useGSAP(() => {
-    if (!isHome) {
-      setIsHero(false)
-      return
+  const checkBackground = useCallback(() => {
+    const nav = navRef.current
+    if (!nav) return
+
+    // Sample point at the center of the navbar
+    const x = window.innerWidth / 2
+    const y = nav.offsetHeight / 2
+
+    // Get all elements stacked at this point
+    const elements = document.elementsFromPoint(x, y)
+
+    for (const el of elements) {
+      // Skip the navbar and its children
+      if (nav.contains(el)) continue
+      // Skip the film grain overlay (body::after is not an element, but skip body too initially)
+      if (el === document.documentElement) continue
+
+      const bg = getComputedStyle(el).backgroundColor
+      if (bg && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)') {
+        const rgb = parseRGB(bg)
+        if (rgb) {
+          // Relative luminance: dark bg → white text
+          const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255
+          setIsDark(luminance < 0.5)
+          return
+        }
+      }
     }
 
-    const hero = document.querySelector('section')
-    if (!hero) return
+    // Fallback: check body background
+    const bodyBg = getComputedStyle(document.body).backgroundColor
+    const rgb = parseRGB(bodyBg)
+    if (rgb) {
+      const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255
+      setIsDark(luminance < 0.5)
+    } else {
+      setIsDark(false)
+    }
+  }, [])
 
-    setIsHero(true)
-    ScrollTrigger.create({
-      trigger: hero,
-      start: 'top top',
-      end: 'bottom top',
-      onLeave: () => setIsHero(false),
-      onEnterBack: () => setIsHero(true),
-    })
-  }, { scope: navRef, dependencies: [isHome] })
+  useEffect(() => {
+    // Check on scroll
+    const onScroll = () => {
+      cancelAnimationFrame(rafRef.current)
+      rafRef.current = requestAnimationFrame(checkBackground)
+    }
 
-  const textColor = isHero ? 'text-white' : 'text-dark'
-  const barColor = isHero ? 'bg-white' : 'bg-dark'
+    // Initial check
+    checkBackground()
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      cancelAnimationFrame(rafRef.current)
+    }
+  }, [checkBackground])
+
+  // Re-check when route changes
+  useEffect(() => {
+    // Small delay for page transition to complete
+    const timer = setTimeout(checkBackground, 100)
+    return () => clearTimeout(timer)
+  }, [pathname, checkBackground])
+
+  const textColor = isDark ? 'text-white' : 'text-dark'
+  const barColor = isDark ? 'bg-white' : 'bg-dark'
 
   return (
     <>

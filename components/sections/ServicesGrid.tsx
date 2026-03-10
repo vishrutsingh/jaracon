@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import Link from 'next/link'
 import { services } from '@/content/services'
 import { useServicesGrid } from '@/hooks/useServicesGrid'
+import { useGlassEffect } from '@/hooks/useGlassEffect'
 import { iconMap } from '@/components/ui/ServiceTile'
 import EyebrowLabel from '@/components/ui/EyebrowLabel'
 import LoopText from '@/components/ui/LoopText'
@@ -13,6 +14,7 @@ import { ArrowRight } from 'lucide-react'
 export default function ServicesGrid() {
   const gridRef = useRef<HTMLDivElement>(null)
   const { isFinePointer, setTileRef, handleTileHover, handleGridLeave, activeTiles } = useServicesGrid(gridRef)
+  const { handleMouseMove, handleMouseLeave } = useGlassEffect()
 
   // ─── Mobile / touch: simple CSS grid ───
   if (!isFinePointer) {
@@ -30,14 +32,14 @@ export default function ServicesGrid() {
                 return (
                   <div
                     key={service.id}
-                    className="border border-border p-6 flex flex-col justify-between gap-6 min-h-[220px] hover:bg-surface transition-colors duration-200"
+                    className="glass p-6 flex flex-col justify-between gap-6 min-h-[220px]"
                   >
                     <div className="flex flex-col gap-4">
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted">{num}</span>
                         {Icon && (
-                          <div className="w-9 h-9 rounded-lg bg-orange/8 flex items-center justify-center">
-                            <Icon size={18} className="text-orange" />
+                          <div className="w-9 h-9 rounded-lg bg-mid/8 flex items-center justify-center">
+                            <Icon size={18} className="text-mid" />
                           </div>
                         )}
                       </div>
@@ -49,17 +51,17 @@ export default function ServicesGrid() {
                 )
               })}
               <Link
-                href="/contact"
-                className="border border-border bg-bg p-6 flex flex-col justify-between gap-6 min-h-[220px] group hover:bg-surface transition-colors duration-200"
+                href="/services"
+                className="glass p-6 flex flex-col justify-between gap-6 min-h-[220px] group"
               >
                 <span className="text-xs text-muted">get in touch</span>
                 <div>
                   <h3 className="text-title mb-2">let&apos;s talk</h3>
-                  <span className="text-sm text-orange">
+                  <span className="text-sm text-mid">
                     <LoopText label="reach out &rarr;" />
                   </span>
                 </div>
-                <ArrowRight size={18} className="text-orange" />
+                <ArrowRight size={18} className="text-mid" />
               </Link>
             </div>
           </FadeUp>
@@ -70,11 +72,11 @@ export default function ServicesGrid() {
 
   // ─── Desktop: interactive GSAP grid ───
   return (
-    <section className="h-dvh flex flex-col bg-bg overflow-hidden">
+    <section className="h-dvh flex flex-col bg-dark overflow-hidden">
       <div className="container-site pt-12 pb-6">
         <FadeUp>
-          <EyebrowLabel text="what we do" className="mb-4" />
-          <h2 className="text-heading">our services</h2>
+          <EyebrowLabel text="what we do" className="mb-4 !text-white" />
+          <h2 className="text-heading !text-white">our services</h2>
         </FadeUp>
       </div>
 
@@ -96,17 +98,17 @@ export default function ServicesGrid() {
               style={{ zIndex: 1 }}
               onMouseEnter={() => handleTileHover(i)}
             >
-              <div className="w-full h-full border border-border p-4 flex flex-col justify-between bg-bg hover:bg-surface transition-colors duration-200 overflow-hidden cursor-default select-none">
+              <div className="w-full h-full glass p-4 flex flex-col justify-between overflow-hidden cursor-default select-none" onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
                 <div className="flex flex-col gap-2 min-h-0 flex-1">
                   <div className="flex items-center justify-between shrink-0">
-                    <span className="text-xs text-muted">{num}</span>
+                    <span className="text-xs text-white/40">{num}</span>
                     {Icon && (
-                      <div className={`w-8 h-8 rounded-lg bg-dark/5 flex items-center justify-center transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
-                        <Icon size={16} className="text-mid" />
+                      <div className={`w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
+                        <Icon size={16} className="text-white/50" />
                       </div>
                     )}
                   </div>
-                  <h3 className="text-[1.15rem] font-semibold text-dark leading-tight shrink-0">
+                  <h3 className="text-[1.15rem] font-semibold text-white leading-tight shrink-0">
                     {service.name}
                   </h3>
                   <div
@@ -114,8 +116,8 @@ export default function ServicesGrid() {
                     style={{ maskImage: 'linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)' }}
                   >
                     <div className={isActive ? 'animate-scroll-desc' : ''}>
-                      <p className="text-xs text-mid leading-relaxed py-1">{service.description}</p>
-                      <p className="text-xs text-mid leading-relaxed py-1">{service.description}</p>
+                      <p className="text-xs text-white/50 leading-relaxed py-1">{service.description}</p>
+                      <p className="text-xs text-white/50 leading-relaxed py-1">{service.description}</p>
                     </div>
                   </div>
                 </div>
@@ -132,19 +134,21 @@ export default function ServicesGrid() {
           onMouseEnter={() => handleTileHover(15)}
         >
           <Link
-            href="/contact"
-            className="w-full h-full border border-border bg-bg p-5 flex flex-col justify-between group block hover:bg-surface transition-colors duration-200"
+            href="/services"
+            className="w-full h-full glass p-5 flex flex-col justify-between group block"
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
           >
-            <span className="text-xs text-muted">explore</span>
+            <span className="text-xs text-white/40">explore</span>
             <div>
-              <h3 className="text-title mb-2">view details</h3>
-              <span className="text-[0.8rem] text-orange">
+              <h3 className="text-title !text-white mb-2">view details</h3>
+              <span className="text-[0.8rem] text-mid">
                 <LoopText label="learn more &rarr;" />
               </span>
             </div>
             <ArrowRight
               size={18}
-              className="text-orange group-hover:translate-x-1 transition-transform duration-200"
+              className="text-mid group-hover:translate-x-1 transition-transform duration-200"
             />
           </Link>
         </div>

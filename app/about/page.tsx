@@ -38,8 +38,8 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-24 border-t border-border pt-16">
               <FadeUp>
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-9 h-9 rounded-lg bg-orange/8 flex items-center justify-center">
-                    <Target size={18} className="text-orange" />
+                  <div className="w-9 h-9 rounded-lg bg-mid/8 flex items-center justify-center">
+                    <Target size={18} className="text-mid" />
                   </div>
                   <EyebrowLabel text="our mission" />
                 </div>
@@ -47,8 +47,8 @@ export default function AboutPage() {
               </FadeUp>
               <FadeUp delay={0.1}>
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-9 h-9 rounded-lg bg-orange/8 flex items-center justify-center">
-                    <Eye size={18} className="text-orange" />
+                  <div className="w-9 h-9 rounded-lg bg-mid/8 flex items-center justify-center">
+                    <Eye size={18} className="text-mid" />
                   </div>
                   <EyebrowLabel text="our vision" />
                 </div>
@@ -68,8 +68,8 @@ export default function AboutPage() {
                       const Icon = valueIcons[i] ?? valueIcons[0]
                       return (
                         <div key={value} className="flex items-center gap-4 border-b border-border pb-4">
-                          <div className="w-8 h-8 rounded-lg bg-orange/8 flex items-center justify-center shrink-0">
-                            <Icon size={15} className="text-orange" />
+                          <div className="w-8 h-8 rounded-lg bg-mid/8 flex items-center justify-center shrink-0">
+                            <Icon size={15} className="text-mid" />
                           </div>
                           <span className="text-title">{value}</span>
                         </div>
@@ -88,8 +88,8 @@ export default function AboutPage() {
                       const Icon = principleIcons[i] ?? principleIcons[0]
                       return (
                         <div key={principle} className="flex items-center gap-4 border-b border-border pb-4">
-                          <div className="w-8 h-8 rounded-lg bg-orange/8 flex items-center justify-center shrink-0">
-                            <Icon size={15} className="text-orange" />
+                          <div className="w-8 h-8 rounded-lg bg-mid/8 flex items-center justify-center shrink-0">
+                            <Icon size={15} className="text-mid" />
                           </div>
                           <span className="text-title">{principle}</span>
                         </div>
@@ -113,7 +113,7 @@ export default function AboutPage() {
                 <SplitLines className="text-heading mb-6">
                   <span>Ankit Jhajhria</span>
                 </SplitLines>
-                <span className="text-xs text-orange block mb-6">founder</span>
+                <span className="text-xs text-mid block mb-6">founder</span>
                 <p className="text-body text-mid">
                   Under the visionary leadership of our founder, JARACON EPC PROJECTS
                   has quickly positioned itself as a reliable partner in the construction sector,

@@ -57,7 +57,7 @@ lib/
 components/
   ui/
     LoopText.tsx          # Vertical text loop CTA
-    EyebrowLabel.tsx      # Small section label with orange dot
+    EyebrowLabel.tsx      # Small section label with graphite dot
     SectionHeading.tsx    # H2 with optional eyebrow + subtitle
     ProjectRow.tsx        # Single editorial project row with ArrowRight icon
     ServiceTile.tsx       # Service tile card (exports iconMap)
@@ -67,15 +67,15 @@ components/
     SectionDivider.tsx    # Animated horizontal line divider
   layout/
     Container.tsx         # Max-width + padding wrapper
-    Navbar.tsx            # Fixed transparent nav, dark text, lowercase
+    Navbar.tsx            # Fixed transparent nav, auto-color detection (elementsFromPoint + luminance)
     Footer.tsx            # Cream bg, minimal 2-row footer, MapPin + Mail icons
   sections/
-    Hero.tsx              # Fullscreen video bg, cinematic GSAP entrance, parallax
+    Hero.tsx              # Fullscreen video bg, giant italic scrolling marquee, parallax
     InteriorHero.tsx      # Reusable interior page hero (EyebrowLabel + SplitLines + scroll line)
     ProjectsPreview.tsx   # Editorial project rows with hover image
     AboutSnippet.tsx      # Short intro with floating founder photo (min-h-dvh)
     ServicesGrid.tsx      # Interactive 4×4 GSAP grid (desktop) / CSS grid (mobile)
-    StatsBar.tsx          # Dark bg, orange icons, cream numbers, countUp
+    StatsBar.tsx          # Dark bg, graphite icons, cream numbers, countUp
     ClientsSection.tsx    # Marquee with eyebrow + Handshake icon
     ContactSection.tsx    # Underline fields, floating labels, contact icons (min-h-dvh)
   animations/
@@ -99,7 +99,7 @@ public/
 **Single source of truth: [`.claude/DESIGN.md`](.claude/DESIGN.md)**
 
 - **Aesthetic**: Light editorial — cream bg, near-black text, minimal color
-- **Palette**: bg `#F5F3EE`, dark `#1A1A1A`, mid `#6B6B6B`, orange `#E8521A` (max 2 elements), navy `#2D3161` (max 1 section)
+- **Palette**: bg `#f3f3f4` (platinum), surface `#d9c5b2` (pale-oak), dark `#14110f` (pitch-black), mid `#34312d` (graphite), muted `#7e7f83` (grey). Accent is graphite (mid) — no orange in UI
 - **Font**: Arial only — all text uppercase with `letter-spacing: 0.02em`
 - **Layout**: Full-width container (padded edges), 60ch body max, generous section padding
 - **Motion**: GSAP scroll entrances (translateY 30 + opacity), simple opacity page transitions
@@ -107,7 +107,7 @@ public/
 
 ## Stacking Cards + Scroll Snap (Home Page Only)
 
-StackCards are **only used on the home page**. Interior pages (about, services, projects, contact) use plain scrolling with `pt-[var(--nav-height)]`.
+StackCards are used on the **home page** and **services page**. Other interior pages (about, projects, contact) use plain scrolling with `pt-[var(--nav-height)]`.
 
 On the home page, all sections except Hero are wrapped in `<StackCard index={N}>`. Cards use `position: sticky; top: var(--nav-height)` with increasing z-index so each card covers the previous one.
 
@@ -122,8 +122,8 @@ On the home page, all sections except Hero are wrapped in `<StackCard index={N}>
 ## Interior Pages
 
 - No InteriorHero — content starts directly below navbar
-- No StackCards — plain scrolling layout
-- Navbar always dark (black text); only home page has white text over hero
+- Services page uses StackCards (h-dvh editorial spreads); other interior pages use plain scrolling
+- Navbar auto-detects background color via `elementsFromPoint()` + luminance — no manual theme attributes needed
 - Pages scroll to top on navigation (`window.scrollTo(0, 0)` in TransitionProvider)
 
 ## Rules
@@ -133,8 +133,8 @@ On the home page, all sections except Hero are wrapped in `<StackCard index={N}>
 3. Use constants from `@/lib/tokens` and `@/lib/animations` — never hardcode design values.
 4. Content comes from `@/content/*` — never hardcode company text.
 5. All text is uppercase globally (set on body). Do not override `text-transform`.
-6. Orange appears on maximum 2 elements per page. Navy bg on maximum 1 section.
+6. Accent color is graphite (mid) — no orange in UI. Navy bg on maximum 1 section.
 7. Every section inside a StackCard must have `min-h-dvh`.
 8. Access Lenis via `useLenisRef()` — read `.current` inside callbacks, never at render time.
-9. StackCards are **home page only** — never use on interior pages (causes dead scroll zones).
+9. StackCards on **home page** and **services page** only — other interior pages use plain scrolling.
 10. For GSAP scroll entrances, use `gsap.set()` + `gsap.to()` — never `gsap.from()` (broken `immediateRender` in GSAP 3.14+ with ScrollTrigger).

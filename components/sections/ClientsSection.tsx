@@ -11,8 +11,8 @@ export default function ClientsSection() {
       <div className="container-site mb-12">
         <FadeUp>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-orange/8 flex items-center justify-center">
-              <Handshake size={16} className="text-orange" />
+            <div className="w-8 h-8 rounded-lg bg-mid/8 flex items-center justify-center">
+              <Handshake size={16} className="text-mid" />
             </div>
             <EyebrowLabel text="trusted by" />
           </div>

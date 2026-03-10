@@ -29,7 +29,7 @@ export default function ProjectRow({ project, index, onMouseMove, onMouseEnter, 
               {num}
             </span>
             <div className="min-w-0">
-              <h3 className="text-title group-hover:text-orange transition-colors">
+              <h3 className="text-title group-hover:text-mid transition-colors">
                 {project.title}
               </h3>
               <div className="flex items-center gap-4 mt-2">
@@ -37,7 +37,7 @@ export default function ProjectRow({ project, index, onMouseMove, onMouseEnter, 
                 <span
                   className={`text-xs px-2 py-0.5 border rounded-full ${
                     project.status === 'ongoing'
-                      ? 'border-orange/40 text-orange'
+                      ? 'border-mid/40 text-mid'
                       : 'border-border text-muted'
                   }`}
                 >

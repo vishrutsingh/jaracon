@@ -53,8 +53,8 @@ export default function AboutSnippet() {
                   const Icon = valueIcons[i] ?? valueIcons[0]
                   return (
                     <div key={value} className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-orange/8 flex items-center justify-center shrink-0">
-                        <Icon size={15} className="text-orange" />
+                      <div className="w-8 h-8 rounded-lg bg-mid/8 flex items-center justify-center shrink-0">
+                        <Icon size={15} className="text-mid" />
                       </div>
                       <span className="text-sm text-mid">{value}</span>
                     </div>
