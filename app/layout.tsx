@@ -1,18 +1,10 @@
 import type { Metadata } from "next"
-import { DM_Sans } from "next/font/google"
 import "./globals.css"
 import LenisProvider from "@/providers/LenisProvider"
 import GSAPProvider from "@/providers/GSAPProvider"
 import TransitionProvider from "@/providers/TransitionProvider"
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
-
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-})
 
 export const metadata: Metadata = {
   title: "JARACON EPC PROJECTS — End-to-End Construction Solutions",
@@ -26,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={dmSans.variable}>
+      <body>
         <LenisProvider>
           <GSAPProvider>
             <Navbar />
