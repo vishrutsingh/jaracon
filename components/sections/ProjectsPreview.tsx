@@ -13,7 +13,7 @@ export default function ProjectsPreview() {
   const { imageRef, onMouseMove, onMouseEnter, onMouseLeave } = useProjectHover()
 
   return (
-    <section className="section-padding bg-bg relative">
+    <section className="section-padding bg-bg relative min-h-dvh">
       <div className="container-site">
         <FadeUp>
           <EyebrowLabel text="selected projects" className="mb-6" />
@@ -31,7 +31,7 @@ export default function ProjectsPreview() {
             }}
           />
 
-          <FadeUp>
+          <FadeUp stagger={0.08}>
             <div className="border-t border-border">
               {projects.map((project, i) => (
                 <ProjectRow

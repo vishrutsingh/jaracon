@@ -1,15 +1,21 @@
 'use client'
 
+import { Handshake } from 'lucide-react'
 import EyebrowLabel from '@/components/ui/EyebrowLabel'
 import ClientMarquee from '@/components/ui/ClientMarquee'
 import FadeUp from '@/components/animations/FadeUp'
 
 export default function ClientsSection() {
   return (
-    <section className="section-padding bg-bg overflow-hidden">
+    <section className="section-padding flex-1 overflow-hidden bg-bg">
       <div className="container-site mb-12">
         <FadeUp>
-          <EyebrowLabel text="trusted by" className="mb-6" />
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-orange/8 flex items-center justify-center">
+              <Handshake size={16} className="text-orange" />
+            </div>
+            <EyebrowLabel text="trusted by" />
+          </div>
         </FadeUp>
       </div>
       <ClientMarquee />

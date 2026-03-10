@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { contactInfo } from '@/content/contact'
+import { Mail, MapPin } from 'lucide-react'
 
 const footerLinks = [
   { href: '/about', label: 'about' },
@@ -35,11 +36,15 @@ export default function Footer() {
 
         {/* Bottom row */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pt-6 border-t border-border">
-          <span className="text-xs text-muted">
-            &copy; {new Date().getFullYear()} JARACON EPC PROJECTS. All rights reserved.
-          </span>
-          <div className="flex gap-6">
-            <a href={`mailto:${contactInfo.email}`} className="text-xs text-mid hover:text-dark transition-colors">
+          <div className="flex items-center gap-2">
+            <MapPin size={12} className="text-muted" />
+            <span className="text-xs text-muted">
+              &copy; {new Date().getFullYear()} JARACON EPC PROJECTS. Doha, Qatar.
+            </span>
+          </div>
+          <div className="flex gap-6 items-center">
+            <a href={`mailto:${contactInfo.email}`} className="text-xs text-mid hover:text-dark transition-colors flex items-center gap-1.5">
+              <Mail size={12} />
               {contactInfo.email}
             </a>
             <span className="text-xs text-muted">Privacy Policy</span>

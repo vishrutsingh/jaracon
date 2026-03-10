@@ -1,8 +1,15 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { createContext, useContext, useEffect, useRef } from 'react'
 import Lenis from 'lenis'
 import { gsap, ScrollTrigger } from '@/lib/gsap'
+
+const LenisContext = createContext<React.RefObject<Lenis | null> | null>(null)
+
+/** Returns the ref — access .current inside callbacks, not at render time */
+export function useLenisRef() {
+  return useContext(LenisContext)
+}
 
 export default function LenisProvider({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null)
@@ -26,8 +33,13 @@ export default function LenisProvider({ children }: { children: React.ReactNode 
     return () => {
       gsap.ticker.remove(raf)
       lenis.destroy()
+      lenisRef.current = null
     }
   }, [])
 
-  return <>{children}</>
+  return (
+    <LenisContext.Provider value={lenisRef}>
+      {children}
+    </LenisContext.Provider>
+  )
 }

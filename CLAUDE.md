@@ -11,8 +11,9 @@ JARACON EPC — corporate website for a Qatar-based construction and engineering
 - **Framework**: Next.js 15 (App Router)
 - **Styling**: Tailwind CSS v4
 - **Package manager**: Bun
-- **Smooth scroll**: Lenis (synced with GSAP ScrollTrigger)
-- **Animation**: GSAP (ScrollTrigger, scroll entrances) + Framer Motion (page transitions)
+- **Smooth scroll**: Lenis (synced with GSAP ScrollTrigger, exposed via React context)
+- **Animation**: GSAP (ScrollTrigger, scroll entrances, grid swap) + Framer Motion (page transitions)
+- **Icons**: lucide-react
 - **Font**: DM Sans (single font, weights 400–700)
 
 ## Commands
@@ -29,7 +30,7 @@ bun run start    # Start production server
 ```
 app/
   layout.tsx              # Root layout — DM Sans font, providers, navbar, transition, footer
-  page.tsx                # Home — hero, projects, about, services, stats, clients, contact
+  page.tsx                # Home — hero, about, services, stats+clients, contact (all in StackCards)
   globals.css             # Tailwind v4 + design tokens CSS + typography/layout utilities
   about/page.tsx
   services/page.tsx
@@ -37,47 +38,53 @@ app/
   contact/page.tsx
 content/
   projects.ts             # Project data + types
-  services.ts             # Service data + types
+  services.ts             # Service data + types (15 services with icon field)
   clients.ts              # Client list
   about.ts                # Company info, values, principles
   contact.ts              # Contact details
 hooks/
   useFadeUp.ts            # GSAP scroll entrance hook
   useProjectHover.ts      # Project image follow hook
+  useServicesGrid.ts      # Interactive 4×4 grid — GSAP swap animation, pointer detection
 providers/
-  LenisProvider.tsx       # Smooth scroll — syncs Lenis with GSAP ScrollTrigger
+  LenisProvider.tsx       # Smooth scroll — syncs Lenis with GSAP, exposes via React context
   GSAPProvider.tsx        # GSAP context — scoped to app root
   TransitionProvider.tsx  # Simple opacity fade page transition
 lib/
   gsap.ts                 # Plugin registration — single import point
   tokens.ts               # Design constants (colors, typography, layout)
-  animations.ts           # Animation specs (durations, easings, scroll reveal, hero entrance)
+  animations.ts           # Animation specs (durations, easings, scroll reveal, hero entrance, gridSwap, cardSnap)
 components/
   ui/
     LoopText.tsx          # Vertical text loop CTA
-    EyebrowLabel.tsx      # Small section label
+    EyebrowLabel.tsx      # Small section label with orange dot
     SectionHeading.tsx    # H2 with optional eyebrow + subtitle
-    ProjectRow.tsx        # Single editorial project row
-    ServiceTile.tsx       # Horizontal-scroll service tile card
+    ProjectRow.tsx        # Single editorial project row with ArrowRight icon
+    ServiceTile.tsx       # Service tile card (exports iconMap)
     TagPill.tsx           # Filter pill button
-    CountUp.tsx           # Animated number counter
+    CountUp.tsx           # Animated number counter (GSAP ScrollTrigger)
     ClientMarquee.tsx     # Infinite horizontal scroll
+    SectionDivider.tsx    # Animated horizontal line divider
   layout/
     Container.tsx         # Max-width + padding wrapper
     Navbar.tsx            # Fixed transparent nav, dark text, lowercase
-    Footer.tsx            # Cream bg, minimal 2-row footer
+    Footer.tsx            # Cream bg, minimal 2-row footer, MapPin + Mail icons
   sections/
-    Hero.tsx              # Cream bg, floating photo, staggered entrance
+    Hero.tsx              # Fullscreen video bg, cinematic GSAP entrance, parallax
+    InteriorHero.tsx      # Reusable interior page hero (EyebrowLabel + SplitLines + scroll line)
     ProjectsPreview.tsx   # Editorial project rows with hover image
-    AboutSnippet.tsx      # Short intro with floating founder photo
-    ServicesPreview.tsx   # Horizontal-scroll service tiles with filter pills
-    StatsBar.tsx          # Dark bg, cream numbers, countUp
-    ClientsSection.tsx    # Marquee with eyebrow
-    ContactSection.tsx    # Underline fields, floating labels
+    AboutSnippet.tsx      # Short intro with floating founder photo (min-h-dvh)
+    ServicesGrid.tsx      # Interactive 4×4 GSAP grid (desktop) / CSS grid (mobile)
+    StatsBar.tsx          # Dark bg, orange icons, cream numbers, countUp
+    ClientsSection.tsx    # Marquee with eyebrow + Handshake icon
+    ContactSection.tsx    # Underline fields, floating labels, contact icons (min-h-dvh)
   animations/
     FadeUp.tsx            # Scroll entrance wrapper (GSAP ScrollTrigger)
+    SplitLines.tsx        # Clip-mask text reveal animation
+    StackCard.tsx         # Sticky stacking card with GSAP scroll snap (Lenis scrollTo)
 public/
-  images/                 # Hero bg, project photos, founder photo
+  images/                 # Project photos, founder photo
+  video/                  # Hero background video
 ```
 
 ### Import Conventions
@@ -85,6 +92,7 @@ public/
 - Use constants from `@/lib/tokens` and `@/lib/animations` instead of hardcoding values
 - Content comes from `@/content/*` — never hardcode company text in components
 - Provider stack in layout: `LenisProvider` → `GSAPProvider` → content
+- Access Lenis instance via `useLenisRef()` from `@/providers/LenisProvider` — returns a ref, read `.current` inside callbacks
 
 ## Design Language
 
@@ -97,6 +105,18 @@ public/
 - **Motion**: GSAP scroll entrances (translateY 30 + opacity), simple opacity page transitions
 - **Zero**: gradients, box shadows, uppercase text, letter-spacing tricks
 
+## Stacking Cards + Scroll Snap
+
+All sections except Hero are wrapped in `<StackCard index={N}>`. Cards use `position: sticky; top: var(--nav-height)` with increasing z-index so each card covers the previous one.
+
+**Scroll snapping** (GSAP ScrollTrigger + Lenis `scrollTo`):
+- Down: triggers at 80% viewport → snaps card to top
+- Up: triggers at 20% from top → snaps card off-screen
+- Global `isSnapping` module variable prevents simultaneous/chain snaps
+- `ScrollTrigger.refresh()` runs while locked to avoid chain reactions
+- Every section in a StackCard must be `min-h-dvh` for proper trigger spacing
+- Short sections (StatsBar + ClientsSection) combined into one `h-dvh` card
+
 ## Rules
 
 1. **Always reference `.claude/DESIGN.md` before creating or modifying any component or page.**
@@ -105,3 +125,5 @@ public/
 4. Content comes from `@/content/*` — never hardcode company text.
 5. Never uppercase text anywhere. Never use letter-spacing tricks.
 6. Orange appears on maximum 2 elements per page. Navy bg on maximum 1 section.
+7. Every section inside a StackCard must have `min-h-dvh`.
+8. Access Lenis via `useLenisRef()` — read `.current` inside callbacks, never at render time.

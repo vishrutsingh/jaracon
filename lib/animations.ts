@@ -29,6 +29,17 @@ export const scrollReveal = {
   triggerStart: 'top 88%',
 } as const
 
+export const gridSwap = {
+  duration: 0.5,
+  ease: 'back.out(1.7)',
+  resetDuration: 0.6,
+  resetEase: 'back.out(1.4)',
+} as const
+
+export const cardSnap = {
+  snapDuration: 0.8,
+} as const
+
 export const heroEntrance = {
   lineDelay: 0.1,
   lineY: 30,

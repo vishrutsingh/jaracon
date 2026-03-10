@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import type { Project } from '@/content/projects'
 
 interface ProjectRowProps {
@@ -48,9 +49,10 @@ export default function ProjectRow({ project, index, onMouseMove, onMouseEnter, 
           </div>
           <div className="flex items-center gap-4 shrink-0">
             <span className="text-xs text-muted">{project.year}</span>
-            <span className="text-dark opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-200">
-              &rarr;
-            </span>
+            <ArrowRight
+              size={16}
+              className="text-dark opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-200"
+            />
           </div>
         </div>
       </Link>
