@@ -27,7 +27,7 @@ function getServicesByCategory(cat: ServiceCategory) {
 // ─── Quotation CTA ───
 function QuotationLink({ serviceId }: { serviceId: string }) {
   return (
-    <Link href={`/contact?service=${serviceId}`} className="text-[0.8rem] text-mid inline-block mt-4">
+    <Link href={`/contact?service=${serviceId}`} className="text-[0.8rem] text-mid inline-block mt-2">
       <LoopText label="request quotation →" />
     </Link>
   )
@@ -150,9 +150,9 @@ function FinishingSpread() {
   const { handleMouseMove, handleMouseLeave } = useGlassEffect()
 
   return (
-    <section className="h-dvh bg-dark flex flex-col overflow-hidden">
+    <section className="h-dvh bg-dark flex flex-col pb-[var(--nav-height)]">
       {/* Dark header band */}
-      <div className="py-6">
+      <div className="shrink-0 py-3">
         <div className="container-site flex items-center justify-between">
           <SplitLines className="text-[clamp(1rem,2vw,1.5rem)] font-bold tracking-[0.4em] text-white">
             <span>F I N I S H I N G</span>
@@ -168,24 +168,24 @@ function FinishingSpread() {
       </div>
 
       {/* Specimen grid */}
-      <div className="container-site flex-1">
-        <div className="grid grid-cols-1 md:grid-cols-3 h-full">
+      <div className="container-site flex-1 min-h-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 h-full">
           {items.map((service, i) => {
             const Icon = iconMap[service.icon]
             const num = String(i + 1).padStart(2, '0')
             return (
-              <FadeUp key={service.id} delay={0.1 + i * 0.08}>
+              <FadeUp key={service.id} delay={0.1 + i * 0.08} className="h-full">
                 <div
-                  className="border-b border-r border-white/10 p-8 min-h-[280px] flex flex-col justify-between"
+                  className="border-b border-r border-white/10 p-5 h-full flex flex-col justify-between"
                   onMouseMove={handleMouseMove}
                   onMouseLeave={handleMouseLeave}
                 >
                   <div>
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center justify-between mb-3">
                       <span className="text-xs text-white/40">{num}</span>
                       {Icon && <Icon size={16} className="text-white/30" />}
                     </div>
-                    <h3 className="text-title !text-white mb-4">{service.name}</h3>
+                    <h3 className="text-title !text-white mb-2">{service.name}</h3>
                     <p className="text-xs text-white/60 leading-relaxed">{service.description}</p>
                   </div>
                   <QuotationLink serviceId={service.id} />
@@ -224,9 +224,9 @@ function InfrastructureSpread() {
             const Icon = iconMap[service.icon]
             const num = String(i + 1).padStart(2, '0')
             return (
-              <FadeUp key={service.id} delay={0.15 + i * 0.15}>
+              <FadeUp key={service.id} delay={0.15 + i * 0.15} className="h-full">
                 <div
-                  className="glass min-h-[50vh] p-10 md:p-12 flex flex-col justify-between"
+                  className="glass h-full p-10 md:p-12 flex flex-col justify-between"
                   onMouseMove={handleMouseMove}
                   onMouseLeave={handleMouseLeave}
                 >

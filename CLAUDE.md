@@ -36,6 +36,7 @@ app/
   services/page.tsx
   projects/page.tsx
   contact/page.tsx
+  quotation/page.tsx        # Internal proposal page — 8 sections, PDF-ready layout
 content/
   projects.ts             # Project data + types
   services.ts             # Service data + types (15 services with icon field)
@@ -49,7 +50,7 @@ hooks/
 providers/
   LenisProvider.tsx       # Smooth scroll — syncs Lenis with GSAP, exposes via React context
   GSAPProvider.tsx        # GSAP context — scoped to app root
-  TransitionProvider.tsx  # Simple opacity fade page transition
+  TransitionProvider.tsx  # Simple opacity fade page transition + scroll-to-top on mount/navigation
 lib/
   gsap.ts                 # Plugin registration — single import point
   tokens.ts               # Design constants (colors, typography, layout)
@@ -124,7 +125,35 @@ On the home page, all sections except Hero are wrapped in `<StackCard index={N}>
 - No InteriorHero — content starts directly below navbar
 - Services page uses StackCards (h-dvh editorial spreads); other interior pages use plain scrolling
 - Navbar auto-detects background color via `elementsFromPoint()` + luminance — no manual theme attributes needed
-- Pages scroll to top on navigation (`window.scrollTo(0, 0)` in TransitionProvider)
+- Pages scroll to top on navigation and reload (`history.scrollRestoration = 'manual'` + `useEffect` in TransitionProvider)
+
+## Brand Exploration (Design System Page)
+
+The `/design-system` page is a self-contained brand exploration tool for client review. It presents **10 typography + color combinations** via a tab bar, each showing tokens, typography scale, and component mockups.
+
+**All proposed styling is inline — no project tokens or styles are modified.**
+
+### The 10 Combos
+
+| # | Name | Display Font | Body Font | Accent |
+|---|------|---|---|---|
+| 1 | Warm Editorial | Playfair Display | DM Sans | `#A8875A` bronze |
+| 2 | Desert Modern | Cormorant Garamond | Outfit | `#B86B4A` terracotta |
+| 3 | Classic Refined | EB Garamond | Inter | `#7C6E58` dark khaki |
+| 4 | Monochrome Authority | Syne | IBM Plex Sans | `#5C5C5C` monochrome |
+| 5 | Midnight Prestige | Fraunces | Manrope | `#1E2D4D` deep navy |
+| 6 | Technical Warmth | Space Grotesk | DM Sans | `#8B6D4B` warm umber |
+| 7 | Haute Construct | Bodoni Moda | Libre Franklin | `#9B5E3C` burnt sienna |
+| 8 | Studio Contemporary | Instrument Serif | Geist | `#6B5B8D` muted plum |
+| 9 | Heritage Craft | Libre Caslon Display | Karla | `#6A7D5E` sage green |
+| 10 | Bold Narrative | Bricolage Grotesque | Plus Jakarta Sans | `#C4694A` burnt coral |
+
+### How It Works
+- Fonts loaded in `app/layout.tsx` via `next/font/google` — 19 fonts exposed as CSS variables on `<html>`
+- `app/design-system/page.tsx` contains all combo data as local constants
+- Each combo tab renders: color swatches, spacing tokens, design rules, full type scale, hero marquee preview, font weight specimens, dark bg specimens, navbar mock (light + dark), eyebrow labels, section headings (light + dark), stats bar, project rows, service tiles, CTA links
+- Existing pages are unaffected — they still use Arial from `globals.css`
+- Once a direction is chosen, the selected combo's values will be applied to `globals.css`, `lib/tokens.ts`, and component files
 
 ## Rules
 

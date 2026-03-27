@@ -125,7 +125,7 @@ All sections (except Hero) are wrapped in `<StackCard>`. Each card sticks below 
 - **Services page** uses StackCards with `h-dvh` sections (editorial spreads per category)
 - Other interior pages use plain scrolling — no StackCards
 - **Navbar auto-detects** background color via `elementsFromPoint()` + luminance calculation — switches white/dark text automatically
-- Pages scroll to top on navigation via `window.scrollTo(0, 0)` in TransitionProvider
+- Pages scroll to top on navigation and reload (`history.scrollRestoration = 'manual'` + `useEffect` in TransitionProvider)
 
 ## Services Page — `app/services/page.tsx`
 
@@ -255,3 +255,5 @@ Hook: `hooks/useServicesGrid.ts` — position math, swap logic, neighbor calcula
 | 2026-03-10 | CTA tile renamed: "let's talk" → "view details", "reach out" → "learn more" | ServicesGrid.tsx |
 | 2026-03-10 | Glassmorphism: glass/glass-dark utility classes, useGlassEffect cursor-tracking hook | globals.css, tokens.ts, useGlassEffect, ServicesGrid, ServiceTile, StatsBar |
 | 2026-03-10 | Palette swap: eggshell/almond-cream/almond-silk/rosy-taupe/taupe warm tones | globals.css, tokens.ts, DESIGN.md, CLAUDE.md |
+| 2026-03-10 | Scroll-to-top on reload: `history.scrollRestoration = 'manual'` + `useEffect` | TransitionProvider.tsx |
+| 2026-03-10 | Finishing section: equal-height cards with `grid-rows-2` + `pb-[var(--nav-height)]` | services/page.tsx |
